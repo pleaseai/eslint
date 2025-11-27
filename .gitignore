@@ -410,3 +410,5 @@ $RECYCLE.BIN/
 dist
 
 .claude/settings.local.json
+
+.turbo

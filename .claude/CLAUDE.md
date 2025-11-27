@@ -1,3 +1,73 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is **pleaseai-eslint**, a CLI tool that converts ESLint configurations into AI assistant rules for Cursor, Copilot, Claude, Windsurf, and 15+ other AI coding tools.
+
+## Commands
+
+```bash
+# Install dependencies
+bun install
+
+# Development (watch mode)
+bun run dev
+
+# Build all packages
+bun run build
+
+# Run tests
+bun run test
+bun run test:coverage
+
+# Run a single test file
+cd packages/cli && bun test __tests__/parser.test.ts
+
+# Linting
+bun run check           # Check for issues
+bun run fix             # Auto-fix issues
+
+# CLI usage (after build)
+node packages/cli/dist/index.js init
+node packages/cli/dist/index.js generate
+node packages/cli/dist/index.js preview
+node packages/cli/dist/index.js check
+```
+
+## Architecture
+
+**Monorepo Structure:**
+- `packages/cli/` - Main CLI package (`@pleaseai/lint`)
+- `ref/ultracite/` - Git submodule reference implementation
+
+**CLI Source (`packages/cli/src/`):**
+- `agents/` - Rule generators for each AI tool (Cursor, Copilot, Claude, etc.)
+- `commands/` - CLI commands (check, preview)
+- `eslint/` - ESLint config parsing and loading (`parser.ts`, `loader.ts`)
+- `mappings/` - Rule mapping databases (core, typescript, react)
+- `consts/` - Constants for supported agents and rule categories
+- `index.ts` - TRPC router and CLI entry point
+- `generate.ts` - Main generation logic
+- `initialize.ts` - Project initialization
+
+**Key Patterns:**
+- Uses TRPC with `trpc-cli` for command routing
+- Zod schemas for validation
+- `@clack/prompts` for interactive CLI
+- Tests use Bun's native test runner
+
+**Build:**
+- Turborepo orchestrates tasks with Vercel remote caching
+- tsup bundles TypeScript to ESM with shebang
+
+## Supported AI Agents
+
+19 agents: cursor, vscode-copilot, windsurf, claude, zed, codex, kiro, cline, amp, aider, firebase-studio, open-hands, gemini-cli, junie, augmentcode, kilo-code, goose, roo-code, warp
+
+---
+
 <!-- pleaseai-lint:start -->
 
 # ESLint Code Standards
