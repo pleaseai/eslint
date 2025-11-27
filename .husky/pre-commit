@@ -1,4 +1,1 @@
-# Ensure bun is in PATH for GUI apps (IDEs, etc.)
-export PATH="$HOME/.bun/bin:$PATH"
-
 bun x lint-staged
