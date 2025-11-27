@@ -109,6 +109,25 @@ For a project with TypeScript ESLint rules, you might see guidelines like:
 - Node.js 18+
 - ESLint configuration in your project
 
+## Contributing
+
+### Setup
+
+```bash
+bun install
+```
+
+### Git Hooks (for GUI apps)
+
+If you're using a GUI app (VS Code, WebStorm, etc.) and encounter `bun: not found` errors when committing, create `~/.config/husky/init.sh`:
+
+```bash
+mkdir -p ~/.config/husky
+echo 'export PATH="$HOME/.bun/bin:$PATH"' > ~/.config/husky/init.sh
+```
+
+This ensures bun is available for Git hooks in GUI environments.
+
 ## License
 
 MIT
