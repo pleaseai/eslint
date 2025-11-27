@@ -11,7 +11,8 @@
     "test:coverage": "turbo test:coverage",
     "check": "eslint .",
     "fix": "eslint . --fix",
-    "bump-deps": "npx npm-check-updates --deep -u -x recharts && bun install"
+    "bump-deps": "npx npm-check-updates --deep -u -x recharts && bun install",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
@@ -19,6 +20,8 @@
     "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
     "eslint-plugin-format": "^1.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "turbo": "^2.6.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0"
@@ -26,5 +29,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "lint-staged": {
+    "*.{js,ts,mjs,cjs,jsx,tsx,vue,json,yaml,yml,md}": "eslint --fix"
+  }
 }
