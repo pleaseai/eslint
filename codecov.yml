@@ -1,0 +1,72 @@
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  precision: 2
+  round: down
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: "reach,diff,flags,components"
+  behavior: default
+  require_changes: true
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+      - type: patch
+        target: 80%
+
+  individual_components:
+    - component_id: cli-core
+      name: CLI Core
+      paths:
+        - packages/cli/src/index.ts
+        - packages/cli/src/initialize.ts
+        - packages/cli/src/generate.ts
+        - packages/cli/src/utils.ts
+
+    - component_id: cli-eslint
+      name: ESLint Processing
+      paths:
+        - packages/cli/src/eslint/**
+
+    - component_id: cli-mappings
+      name: Rule Mappings
+      paths:
+        - packages/cli/src/mappings/**
+
+    - component_id: cli-agents
+      name: Agent Factory
+      paths:
+        - packages/cli/src/agents/**
+
+    - component_id: cli-commands
+      name: CLI Commands
+      paths:
+        - packages/cli/src/commands/**
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: cli
+      paths:
+        - packages/cli/src/**
+      carryforward: true
+
+ignore:
+  - "**/*.test.ts"
+  - "**/__tests__/**"
+  - "**/dist/**"
+  - "**/node_modules/**"
