@@ -39,10 +39,12 @@ node packages/cli/dist/index.js check
 ## Architecture
 
 **Monorepo Structure:**
+
 - `packages/cli/` - Main CLI package (`@pleaseai/lint`)
 - `ref/ultracite/` - Git submodule reference implementation
 
 **CLI Source (`packages/cli/src/`):**
+
 - `agents/` - Rule generators for each AI tool (Cursor, Copilot, Claude, etc.)
 - `commands/` - CLI commands (check, preview)
 - `eslint/` - ESLint config parsing and loading (`parser.ts`, `loader.ts`)
@@ -53,12 +55,14 @@ node packages/cli/dist/index.js check
 - `initialize.ts` - Project initialization
 
 **Key Patterns:**
+
 - Uses TRPC with `trpc-cli` for command routing
 - Zod schemas for validation
 - `@clack/prompts` for interactive CLI
 - Tests use Bun's native test runner
 
 **Build:**
+
 - Turborepo orchestrates tasks with Vercel remote caching
 - tsup bundles TypeScript to ESM with shebang
 
