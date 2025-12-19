@@ -1,7 +1,7 @@
 {
   "name": "@pleaseai/lint",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "packageManager": "bun@1.3.2",
   "description": "Convert ESLint config to AI rules for coding assistants",
   "license": "MIT",
