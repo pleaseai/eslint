@@ -3,6 +3,8 @@ import type { AgentName } from './options'
 export interface EditorRuleConfig {
   path: string
   header?: string
+  /** Dynamic header generator based on file patterns */
+  getHeader?: (filePatterns: string[]) => string
   appendMode?: boolean
 }
 
@@ -30,8 +32,13 @@ alwaysApply: false
     appendMode: true,
   },
   'claude': {
-    path: './.claude/CLAUDE.md',
-    appendMode: true,
+    path: './.claude/rules/eslint-rules.md',
+    getHeader: (filePatterns: string[]) => {
+      const patterns = filePatterns.length > 0
+        ? filePatterns.join(', ')
+        : '**/*.{ts,tsx,js,jsx,json,vue,svelte,astro}'
+      return `---\npaths: "${patterns}"\n---`
+    },
   },
   'codex': {
     path: './AGENTS.md',

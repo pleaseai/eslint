@@ -65,6 +65,9 @@ export interface ParsedEslintConfig {
 
   /** Number of active rules (warn + error) */
   activeRules: number
+
+  /** File patterns extracted from ESLint config */
+  filePatterns?: string[]
 }
 
 /**

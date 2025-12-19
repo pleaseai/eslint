@@ -12,6 +12,8 @@ export interface CreateAgentsOptions {
   config: ParsedEslintConfig
   /** Generator options */
   generatorOptions?: GeneratorOptions
+  /** File patterns extracted from ESLint config */
+  filePatterns?: string[]
 }
 
 /**
@@ -22,8 +24,14 @@ export function createAgents(name: AgentName, options: CreateAgentsOptions) {
 
   // Generate dynamic rules content
   const rulesContent = generateRulesContent(options.config, options.generatorOptions)
-  const content = agentConfig.header
-    ? `${agentConfig.header}\n\n${rulesContent}`
+
+  // Generate header (dynamic or static)
+  const header = agentConfig.getHeader
+    ? agentConfig.getHeader(options.filePatterns ?? [])
+    : agentConfig.header
+
+  const content = header
+    ? `${header}\n\n${rulesContent}`
     : rulesContent
 
   const ensureDirectory = async () => {
