@@ -1,7 +1,7 @@
 import type { AgentName } from './consts/options'
 import * as p from '@clack/prompts'
 import { createAgents, getAgentNames } from './agents'
-import { loadESLintConfig } from './eslint/loader'
+import { extractFilePatterns, loadESLintConfig } from './eslint/loader'
 import { parseESLintConfig } from './eslint/parser'
 
 export interface GenerateOptions {
@@ -43,8 +43,14 @@ export async function generate(options: GenerateOptions = {}): Promise<void> {
   const parsed = parseESLintConfig(rawConfig)
   spinner?.stop(`Loaded ${parsed.activeRules} active ESLint rules`)
 
+  // Extract file patterns from ESLint config
+  const filePatterns = await extractFilePatterns()
+
   if (!quiet) {
     p.log.info(`Detected plugins: ${parsed.plugins.join(', ') || 'None'}`)
+    if (filePatterns.length > 0) {
+      p.log.info(`File patterns: ${filePatterns.join(', ')}`)
+    }
   }
 
   // Determine which agents to generate for
@@ -60,6 +66,7 @@ export async function generate(options: GenerateOptions = {}): Promise<void> {
       const agent = createAgents(agentName, {
         config: parsed,
         generatorOptions: { includeGuidance: true },
+        filePatterns,
       })
 
       await agent.update()

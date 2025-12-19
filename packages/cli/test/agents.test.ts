@@ -44,11 +44,14 @@ describe('getAgentConfig', () => {
     expect(config.appendMode).toBeUndefined()
   })
 
-  test('returns config for claude with appendMode', () => {
+  test('returns config for claude with dynamic header', () => {
     const config = getAgentConfig('claude')
 
-    expect(config.path).toBe('./.claude/CLAUDE.md')
-    expect(config.appendMode).toBe(true)
+    expect(config.path).toBe('./.claude/rules/eslint-rules.md')
+    expect(config.getHeader).toBeDefined()
+    expect(config.getHeader?.([])).toContain('paths:')
+    expect(config.getHeader?.(['**/*.ts', '**/*.tsx'])).toContain('**/*.ts, **/*.tsx')
+    expect(config.appendMode).toBeUndefined()
   })
 
   test('returns config for vscode-copilot with header', () => {
@@ -99,7 +102,7 @@ describe('createAgents', () => {
   })
 
   test('update creates new file with markers for appendMode agent', async () => {
-    const agent = createAgents('claude', { config: createMockConfig() })
+    const agent = createAgents('codex', { config: createMockConfig() })
     await agent.update()
 
     const content = await readFile(agent.getPath(), 'utf-8')
@@ -109,11 +112,10 @@ describe('createAgents', () => {
   })
 
   test('update appends to existing file for appendMode agent', async () => {
-    const agent = createAgents('claude', { config: createMockConfig() })
+    const agent = createAgents('codex', { config: createMockConfig() })
 
     // Create existing file
-    await mkdir('.claude', { recursive: true })
-    await writeFile('.claude/CLAUDE.md', '# Existing Content\n\nSome existing rules.\n')
+    await writeFile('AGENTS.md', '# Existing Content\n\nSome existing rules.\n')
 
     await agent.update()
 
@@ -125,12 +127,11 @@ describe('createAgents', () => {
   })
 
   test('update replaces existing markers for appendMode agent', async () => {
-    const agent = createAgents('claude', { config: createMockConfig() })
+    const agent = createAgents('codex', { config: createMockConfig() })
 
     // Create existing file with markers
-    await mkdir('.claude', { recursive: true })
     await writeFile(
-      '.claude/CLAUDE.md',
+      'AGENTS.md',
       `# Existing Content
 
 ${MARKER_START}
@@ -148,6 +149,28 @@ ${MARKER_END}
     expect(content).toContain('# More content')
     expect(content).toContain('# ESLint Code Standards')
     expect(content).not.toContain('Old generated content')
+  })
+
+  test('create includes header for claude with default patterns', async () => {
+    const agent = createAgents('claude', { config: createMockConfig() })
+    await agent.create()
+
+    const content = await readFile(agent.getPath(), 'utf-8')
+    expect(content).toContain('paths:')
+    expect(content).toContain('**/*.{ts,tsx,js,jsx,json,vue,svelte,astro}')
+    expect(content).toContain('# ESLint Code Standards')
+  })
+
+  test('create includes header for claude with custom patterns', async () => {
+    const agent = createAgents('claude', {
+      config: createMockConfig(),
+      filePatterns: ['src/**/*.ts', 'src/**/*.tsx'],
+    })
+    await agent.create()
+
+    const content = await readFile(agent.getPath(), 'utf-8')
+    expect(content).toContain('paths: "src/**/*.ts, src/**/*.tsx"')
+    expect(content).toContain('# ESLint Code Standards')
   })
 
   test('update overwrites for non-appendMode agent', async () => {
